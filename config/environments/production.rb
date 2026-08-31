@@ -3,6 +3,7 @@ require "json_logging"
 
 Rails.application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
+  default_host = ENV.fetch("DOMAIN", "example.com")
 
   # Code is not reloaded between requests.
   config.enable_reloading = false
@@ -61,7 +62,7 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
 
   # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  config.action_mailer.default_url_options = { host: default_host }
 
   # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
   # config.action_mailer.smtp_settings = {
@@ -90,4 +91,14 @@ Rails.application.configure do
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  config.action_controller.default_url_options
+  config.ssl_options = {
+    hsts: {
+      subdomains: true,
+      preload: true,
+      expires: 1.year
+    }
+  }
+  
 end
